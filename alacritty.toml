@@ -1,0 +1,77 @@
+[terminal.shell]
+program = "/bin/zsh"
+[env]
+TERM = "xterm-256color"
+[window]
+decorations = "None"
+dynamic_padding = false
+
+[cursor]
+unfocused_hollow = true
+style = { shape = "Underline", blinking = "On" }
+
+[mouse]
+hide_when_typing = true
+
+[selection]
+save_to_clipboard = true
+
+[bell]
+animation = "EaseOutExpo"
+duration = 1
+
+# Font
+[font]
+size = 17.0
+[font.normal]
+family = "Hack Nerd Font"
+style = "Regular"
+[font.bold]
+family = "Hack Nerd Font"
+style = "SemiBold"
+[font.italic]
+family = "Hack Nerd Font"
+style = "Italic"
+[font.bold_italic]
+family = "Hack Nerd Font"
+style = "Bold Italic"
+# Colors (One Dark Pro)
+# Source: https://github.com/atom/one-dark-syntax
+[colors.primary]
+background = '#121212'
+foreground = '#abb2bf'
+
+[colors.normal]
+black   = '#282c34'
+red     = '#e06c75'
+green   = '#98c379'
+yellow  = '#e5c07b'
+blue    = '#61afef'
+magenta = '#c678dd'
+cyan    = '#56b6c2'
+white   = '#dcdfe4'
+
+[colors.bright]
+black   = '#5c6370'
+red     = '#e06c75'
+green   = '#98c379'
+yellow  = '#e5c07b'
+blue    = '#61afef'
+magenta = '#c678dd'
+cyan    = '#56b6c2'
+white   = '#ffffff'
+
+
+# Indexed colors (uncomment to customize)
+# [[colors.indexed_colors]]
+[keyboard]
+bindings = [
+{ key = "C", mods = "Control", action = "Copy" },
+{ key = "V", mods = "Control", action = "Paste" },
+{ key = "K", mods = "Control", chars =  "\u0003" },
+{ key = "+", mods = "Control", action = "IncreaseFontSize" },
+{ key = "-", mods = "Control", action = "DecreaseFontSize" },
+{ key = "0", mods = "Control", action = "ResetFontSize" },
+]# index = 16
+
+[terminal]
