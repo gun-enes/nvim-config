@@ -22,29 +22,49 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 -- Setup lazy.nvim
 require("lazy").setup({
-  spec = {
+    spec = {
+        {
+            "vimwiki/vimwiki",
+            init = function()
+                vim.g.vimwiki_list = {{ path = '~/notes', syntax = 'markdown', ext = '.md' }}
+                vim.g.vimwiki_global_ext = 0
+            end,
+        },
+        {
+            "ThePrimeagen/harpoon",
+            branch = "harpoon2",
+            dependencies = { "nvim-lua/plenary.nvim" }
+        },
+        { "maxmellon/vim-jsx-pretty" },
+        { "mg979/vim-visual-multi" },
+        { "folke/which-key.nvim" },
+        { "lewis6991/gitsigns.nvim" },
+        { "charlespascoe/vim-go-syntax" },
+
+    -- 👇 ADD SUPERMAVEN HERE 👇
     {
-      "vimwiki/vimwiki",
-      init = function()
-        vim.g.vimwiki_list = {{
-          path = '~/notes',       -- 📁 change this to where your wiki folder is
-          syntax = 'markdown',      -- 📝 use markdown syntax
-          ext = '.md',              -- 📄 use .md as default file extension
-        }}
-        vim.g.vimwiki_global_ext = 0 -- prevent Vimwiki from treating all .md as wiki files
+      "supermaven-inc/supermaven-nvim",
+      config = function()
+        require("supermaven-nvim").setup({
+          keymaps = {
+            accept_suggestion = "<Tab>", -- customize this if you want
+            clear_suggestion = "<C-]>",
+            accept_word = "<C-j>",
+          },
+          ignore_filetypes = { cpp = true }, -- example: ignore specific filetypes
+          color = {
+            suggestion_color = "#888888",
+            cterm = 244,
+          }
+        })
       end,
     },
-    { "maxmellon/vim-jsx-pretty" },
-    { "mg979/vim-visual-multi" },
-    { "folke/which-key.nvim" },
-    { "lewis6991/gitsigns.nvim" },
-    { "charlespascoe/vim-go-syntax" },
+    -- 👆 END SUPERMAVEN 👆
+
     { import = "config.plugins" },
   },
   
-  -- Configure any other settings here. See the documentation for more details.
-  -- colorscheme that will be used when installing plugins.
+  -- Your other settings remain unchanged
   install = { colorscheme = { "habamax" } },
-  -- automatically check for plugin updates
   checker = { enabled = true },
 })

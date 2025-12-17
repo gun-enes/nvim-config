@@ -1,14 +1,3 @@
-local root_files = {
-  '.luarc.json',
-  '.luarc.jsonc',
-  '.luacheckrc',
-  '.stylua.toml',
-  'stylua.toml',
-  'selene.toml',
-  'selene.yml',
-  '.git',
-}
-
 return {
     "neovim/nvim-lspconfig",
     dependencies = {
@@ -28,8 +17,11 @@ return {
     config = function()
         require("conform").setup({
             formatters_by_ft = {
+                -- If you want to use StyLua for formatting instead of Lua_LS, uncomment this:
+                -- lua = { "stylua" },
             }
         })
+
         local cmp = require('cmp')
         local cmp_lsp = require("cmp_nvim_lsp")
         local capabilities = vim.tbl_deep_extend(
@@ -67,7 +59,6 @@ return {
                     })
                     vim.g.zig_fmt_parse_errors = 0
                     vim.g.zig_fmt_autosave = 0
-
                 end,
                 ["lua_ls"] = function()
                     local lspconfig = require("lspconfig")
@@ -75,10 +66,12 @@ return {
                         capabilities = capabilities,
                         settings = {
                             Lua = {
+                                diagnostics = {
+                                    globals = { "vim", "it", "describe", "before_each", "after_each" },
+                                },
                                 format = {
                                     enable = true,
-                                    -- Put format options here
-                                    -- NOTE: the value should be STRING!!
+                                    -- Note: If you use conform.nvim for formatting, set this to false
                                     defaultConfig = {
                                         indent_style = "space",
                                         indent_size = "2",
@@ -106,16 +99,30 @@ return {
                 ["<C-Space>"] = cmp.mapping.complete(),
             }),
             sources = cmp.config.sources({
+                -- Note: 'copilot' source requires the copilot-cmp plugin to be installed
                 { name = "copilot", group_index = 2 },
                 { name = 'nvim_lsp' },
-                { name = 'luasnip' }, -- For luasnip users.
+                { name = 'luasnip' },
             }, {
                 { name = 'buffer' },
             })
         })
 
+        -- DIAGNOSTIC CONFIGURATION
         vim.diagnostic.config({
             -- update_in_insert = true,
+            
+            -- This enables the text next to the error
+            virtual_text = {
+                spacing = 4,
+                prefix = '●', -- Could be '■', '▎', 'x'
+            },
+            
+            -- This shows the signs (gutters icons)
+            signs = {
+                active = signs,
+            },
+            
             float = {
                 focusable = false,
                 style = "minimal",
@@ -125,5 +132,12 @@ return {
                 prefix = "",
             },
         })
+
+        -- Optional: Set standard icons for errors/warnings in the gutter
+        local signs = { Error = "✘", Warn = "▲", Hint = "⚑", Info = "»" }
+        for type, icon in pairs(signs) do
+            local hl = "DiagnosticSign" .. type
+            vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+        end
     end
 }
