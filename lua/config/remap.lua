@@ -124,3 +124,14 @@ end
 
 vim.keymap.set("n", "<C-e>", function() toggle_telescope(harpoon:list()) end,
     { desc = "Open harpoon window" })
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "markdown", "vimwiki" },
+  callback = function()
+    vim.keymap.set('n', '<Tab>', ':bp<CR>', { desc = "Previous buffer" })
+    vim.keymap.set('n', '<S-Tab>', ':bn<CR>', { desc = "Next buffer" })
+    vim.keymap.set("n", "-", "<Cmd>Oil<CR>", { buffer = true })
+  end,
+})
+
+

@@ -1,26 +1,19 @@
--- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-  if vim.v.shell_error ~= 0 then
-    vim.api.nvim_echo({
-      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out, "WarningMsg" },
-      { "\nPress any key to exit..." },
-    }, true, {})
-    vim.fn.getchar()
-    os.exit(1)
-  end
+    local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+    local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+    if vim.v.shell_error ~= 0 then
+        vim.api.nvim_echo({
+            { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+            { out, "WarningMsg" },
+            { "\nPress any key to exit..." },
+        }, true, {})
+        vim.fn.getchar()
+        os.exit(1)
+    end
 end
 vim.opt.rtp:prepend(lazypath)
 
--- Make sure to setup `mapleader` and `maplocalleader` before
--- loading lazy.nvim so that mappings are correct.
--- This is also a good place to setup other settings (vim.opt)
-vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
--- Setup lazy.nvim
 require("lazy").setup({
     spec = {
         {
@@ -40,31 +33,20 @@ require("lazy").setup({
         { "folke/which-key.nvim" },
         { "lewis6991/gitsigns.nvim" },
         { "charlespascoe/vim-go-syntax" },
-
-    -- 👇 ADD SUPERMAVEN HERE 👇
-    {
-      "supermaven-inc/supermaven-nvim",
-      config = function()
-        require("supermaven-nvim").setup({
-          keymaps = {
-            accept_suggestion = "<Tab>", -- customize this if you want
-            clear_suggestion = "<C-]>",
-            accept_word = "<C-j>",
-          },
-          ignore_filetypes = { cpp = true }, -- example: ignore specific filetypes
-          color = {
-            suggestion_color = "#888888",
-            cterm = 244,
-          }
-        })
-      end,
+        {
+            "folke/lazydev.nvim",
+            ft = "lua", -- only load on lua files
+            opts = {
+                library = {
+                    -- Load luvit types when the `vim.uv` library is used
+                    { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+                },
+            },
+        },
+        { import = "config.plugins" },
     },
-    -- 👆 END SUPERMAVEN 👆
 
-    { import = "config.plugins" },
-  },
-  
-  -- Your other settings remain unchanged
-  install = { colorscheme = { "habamax" } },
-  checker = { enabled = true },
+    -- Your other settings remain unchanged
+    install = { colorscheme = { "habamax" } },
+    checker = { enabled = true },
 })
